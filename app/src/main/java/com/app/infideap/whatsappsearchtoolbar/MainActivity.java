@@ -43,14 +43,17 @@ public class MainActivity extends AppCompatActivity {
         initTabLayout();
         initViewPager();
 
+        // select 'Chat' tab.
         tabLayout.getTabAt(1).select();
     }
 
+    /**
+     * Initialize searchBar.
+     */
     private void initSearchBar() {
         searchToolBar = (Toolbar) findViewById(R.id.toolbar_search);
         if (searchToolBar != null) {
             searchToolBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-//            searchToolBar.setVisibility(View.GONE);
             searchAppBar.setVisibility(View.GONE);
             searchToolBar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
@@ -61,7 +64,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
+    /**
+     * Initialize viewPager.
+     */
     private void initViewPager() {
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
@@ -80,6 +85,10 @@ public class MainActivity extends AppCompatActivity {
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
     }
 
+    /**
+     * Initialize tabLayout.
+     * create and add tab.
+     */
     private void initTabLayout() {
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
 
@@ -115,7 +124,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
+    /**
+     * to show the searchAppBar and hide the mainAppBar with animation.
+     */
     private void showSearchBar() {
         AnimatorSet set = new AnimatorSet();
         set.playTogether(
@@ -147,13 +158,17 @@ public class MainActivity extends AppCompatActivity {
         set.start();
 
 
+        // start x-index for circular animation
         int cx = toolbar.getWidth() - toolbar.getHeight() / 2;
+        // start y-index for circular animation
         int cy = (toolbar.getTop() + toolbar.getBottom()) / 2;
 
+        // calculate max radius
         int dx = Math.max(cx, toolbar.getWidth() - cx);
         int dy = Math.max(cy, toolbar.getHeight() - cy);
         float finalRadius = (float) Math.hypot(dx, dy);
 
+        // Circular animation declaration begin
         final Animator animator;
         animator = io.codetail.animation.ViewAnimationUtils
                 .createCircularReveal(searchAppBar, cx, cy, 0, finalRadius);
@@ -161,18 +176,26 @@ public class MainActivity extends AppCompatActivity {
         animator.setDuration(200);
         searchAppBar.setVisibility(View.VISIBLE);
         animator.start();
+        // Circular animation declaration end
     }
 
 
+    /**
+     * to hide the searchAppBar and show the mainAppBar with animation.
+     */
     private void hideSearchBar() {
 
+        // start x-index for circular animation
         int cx = toolbar.getWidth() - toolbar.getHeight() / 2;
+        // start  y-index for circular animation
         int cy = (toolbar.getTop() + toolbar.getBottom()) / 2;
 
+        // calculate max radius
         int dx = Math.max(cx, toolbar.getWidth() - cx);
         int dy = Math.max(cy, toolbar.getHeight() - cy);
         float finalRadius = (float) Math.hypot(dx, dy);
 
+        // Circular animation declaration begin
         Animator animator;
         animator = io.codetail.animation.ViewAnimationUtils
                 .createCircularReveal(searchAppBar, cx, cy, finalRadius, 0);
@@ -200,10 +223,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         animator.start();
-
+        // Circular animation declaration end
 
         appBar.setVisibility(View.VISIBLE);
-
         AnimatorSet set = new AnimatorSet();
         set.playTogether(
                 ObjectAnimator.ofFloat(appBar, "translationY", 0),
@@ -239,6 +261,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        // if the searchToolBar is visible, hide it
+        // otherwise, do parent onBackPressed method
         if (searchAppBar.getVisibility() == View.VISIBLE)
             hideSearchBar();
         else
