@@ -42,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
         initSearchBar();
         initTabLayout();
         initViewPager();
+
+        tabLayout.getTabAt(1).select();
     }
 
     private void initSearchBar() {
@@ -96,6 +98,9 @@ public class MainActivity extends AppCompatActivity {
             public void onTabSelected(TabLayout.Tab tab) {
                 getSupportActionBar().setTitle(tab.getText());
                 viewPager.setCurrentItem(tab.getPosition());
+
+                if (searchAppBar.getVisibility() == View.VISIBLE)
+                    hideSearchBar();
             }
 
             @Override
@@ -207,12 +212,6 @@ public class MainActivity extends AppCompatActivity {
         );
         set.setDuration(100).start();
 
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        tabLayout.getTabAt(viewPager.getCurrentItem()).select();
     }
 
     @Override
