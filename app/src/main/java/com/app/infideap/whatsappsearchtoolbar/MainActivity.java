@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
                 return tabLayout.getTabCount();
             }
         });
+
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
     }
 
