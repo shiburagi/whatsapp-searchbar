@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private Toolbar toolbar;
     private AppBarLayout appBar;
-    private AppBarLayout searchAppBar;
+    private View searchAppBarLayout;
     private ViewPager viewPager;
     private Toolbar searchToolBar;
 
@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         appBar = (AppBarLayout) findViewById(R.id.appBar);
-        searchAppBar = (AppBarLayout) findViewById(R.id.appBar_search);
+        searchAppBarLayout = findViewById(R.id.layout_appbar_search);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         searchToolBar = (Toolbar) findViewById(R.id.toolbar_search);
         if (searchToolBar != null) {
             searchToolBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-            searchAppBar.setVisibility(View.GONE);
+            searchAppBarLayout.setVisibility(View.GONE);
             searchToolBar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                 getSupportActionBar().setTitle(tab.getText());
                 viewPager.setCurrentItem(tab.getPosition());
 
-                if (searchAppBar.getVisibility() == View.VISIBLE)
+                if (searchAppBarLayout.getVisibility() == View.VISIBLE)
                     hideSearchBar();
             }
 
@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * to show the searchAppBar and hide the mainAppBar with animation.
+     * to show the searchAppBarLayout and hide the mainAppBar with animation.
      */
     private void showSearchBar() {
         AnimatorSet set = new AnimatorSet();
@@ -171,17 +171,17 @@ public class MainActivity extends AppCompatActivity {
         // Circular animation declaration begin
         final Animator animator;
         animator = io.codetail.animation.ViewAnimationUtils
-                .createCircularReveal(searchAppBar, cx, cy, 0, finalRadius);
+                .createCircularReveal(searchAppBarLayout, cx, cy, 0, finalRadius);
         animator.setInterpolator(new AccelerateDecelerateInterpolator());
         animator.setDuration(200);
-        searchAppBar.setVisibility(View.VISIBLE);
+        searchAppBarLayout.setVisibility(View.VISIBLE);
         animator.start();
         // Circular animation declaration end
     }
 
 
     /**
-     * to hide the searchAppBar and show the mainAppBar with animation.
+     * to hide the searchAppBarLayout and show the mainAppBar with animation.
      */
     private void hideSearchBar() {
 
@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
         // Circular animation declaration begin
         Animator animator;
         animator = io.codetail.animation.ViewAnimationUtils
-                .createCircularReveal(searchAppBar, cx, cy, finalRadius, 0);
+                .createCircularReveal(searchAppBarLayout, cx, cy, finalRadius, 0);
         animator.setInterpolator(new AccelerateDecelerateInterpolator());
         animator.setDuration(200);
         animator.addListener(new Animator.AnimatorListener() {
@@ -208,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onAnimationEnd(Animator animator) {
-                searchAppBar.setVisibility(View.GONE);
+                searchAppBarLayout.setVisibility(View.GONE);
             }
 
             @Override
@@ -263,7 +263,7 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         // if the searchToolBar is visible, hide it
         // otherwise, do parent onBackPressed method
-        if (searchAppBar.getVisibility() == View.VISIBLE)
+        if (searchAppBarLayout.getVisibility() == View.VISIBLE)
             hideSearchBar();
         else
             super.onBackPressed();
