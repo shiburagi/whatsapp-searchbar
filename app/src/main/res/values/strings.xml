@@ -6,4 +6,5 @@
     <string name="chats">Chats</string>
     <string name="contacts">Contacts</string>
     <string name="action_search">Search</string>
+    <string name="action_new_chat">New chat</string>
 </resources>

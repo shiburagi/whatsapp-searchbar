@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.EditText;
 
 import com.app.infideap.whatsappsearchtoolbar.list.ItemFragment;
 import com.nineoldandroids.animation.AnimatorSet;
@@ -26,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
     private View searchAppBarLayout;
     private ViewPager viewPager;
     private Toolbar searchToolBar;
+    private EditText searchEditText;
+    private float positionFromRight = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
         appBar = (AppBarLayout) findViewById(R.id.appBar);
         searchAppBarLayout = findViewById(R.id.layout_appbar_search);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        searchEditText = (EditText) findViewById(R.id.editText_search);
 
         setSupportActionBar(toolbar);
 
@@ -58,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
             searchToolBar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    hideSearchBar();
+                    hideSearchBar(positionFromRight);
                 }
             });
         }
@@ -109,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
                 viewPager.setCurrentItem(tab.getPosition());
 
                 if (searchAppBarLayout.getVisibility() == View.VISIBLE)
-                    hideSearchBar();
+                    hideSearchBar(positionFromRight);
             }
 
             @Override
@@ -126,8 +130,10 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * to show the searchAppBarLayout and hide the mainAppBar with animation.
+     *
+     * @param positionFromRight
      */
-    private void showSearchBar() {
+    private void showSearchBar(float positionFromRight) {
         AnimatorSet set = new AnimatorSet();
         set.playTogether(
                 ObjectAnimator.ofFloat(appBar, "translationY", -tabLayout.getHeight()),
@@ -143,6 +149,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAnimationEnd(com.nineoldandroids.animation.Animator animation) {
                 appBar.setVisibility(View.GONE);
+                searchEditText.requestFocus();
+                Utils.showKeyBoard(searchEditText);
             }
 
             @Override
@@ -159,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         // start x-index for circular animation
-        int cx = toolbar.getWidth() - toolbar.getHeight() / 2;
+        int cx = toolbar.getWidth() - (int) (getResources().getDimension(R.dimen.dp48)* (0.5f + positionFromRight));
         // start y-index for circular animation
         int cy = (toolbar.getTop() + toolbar.getBottom()) / 2;
 
@@ -182,11 +190,13 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * to hide the searchAppBarLayout and show the mainAppBar with animation.
+     *
+     * @param positionFromRight
      */
-    private void hideSearchBar() {
+    private void hideSearchBar(float positionFromRight) {
 
         // start x-index for circular animation
-        int cx = toolbar.getWidth() - toolbar.getHeight() / 2;
+        int cx = toolbar.getWidth() - (int) (getResources().getDimension(R.dimen.dp48) * (0.5f + positionFromRight));
         // start  y-index for circular animation
         int cy = (toolbar.getTop() + toolbar.getBottom()) / 2;
 
@@ -209,6 +219,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAnimationEnd(Animator animator) {
                 searchAppBarLayout.setVisibility(View.GONE);
+                Utils.hideKeyBoard(searchEditText);
+
             }
 
             @Override
@@ -252,7 +264,7 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_search) {
-            showSearchBar();
+            showSearchBar(positionFromRight);
             return true;
         }
 
@@ -264,7 +276,7 @@ public class MainActivity extends AppCompatActivity {
         // if the searchToolBar is visible, hide it
         // otherwise, do parent onBackPressed method
         if (searchAppBarLayout.getVisibility() == View.VISIBLE)
-            hideSearchBar();
+            hideSearchBar(positionFromRight);
         else
             super.onBackPressed();
 
